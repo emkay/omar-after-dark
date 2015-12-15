@@ -6,10 +6,10 @@ var gameOver = require('./lib/game-over')
 
 pressStart()
 
-var screenX = 800
-var screenY = 450
+var screenX = 398
+var screenY = 224
 
-var game = new Phaser.Game(screenX, screenY, Phaser.CANVAS, '', null, false, false)
+var game = new Phaser.Game(screenX, screenY, Phaser.AUTO, '', null, false, false)
 
 game.state.add('boot', boot)
 game.state.add('mainMenu', mainMenu)
