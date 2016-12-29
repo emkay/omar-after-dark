@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": "browserify app.js | uglifyjs -m -c warnings=false > bundle.js",
-    "start": "budo app.js:bundle.js --live",
+    "start": "budo app.js:bundle.js",
     "test": "standard"
   },
   "repository": {
