@@ -25,7 +25,8 @@
   },
   "homepage": "https://github.com/emkay/omar-after-dark#readme",
   "dependencies": {
-    "phaser-ce": "^2.7.2"
+    "phaser-ce": "^2.7.2",
+    "press-start-font": "^1.0.0"
   },
   "devDependencies": {
     "browserify": "^13.1.1",
