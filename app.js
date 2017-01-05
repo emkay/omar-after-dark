@@ -2,13 +2,10 @@ window.PIXI = require('phaser-ce/build/custom/pixi')
 window.p2 = require('phaser-ce/build/custom/p2')
 window.Phaser = require('phaser-ce/build/custom/phaser-split')
 
-const pressStart = require('press-start-font')
 const boot = require('./lib/boot')
 const mainMenu = require('./lib/main-menu')
 const gameLoop = require('./lib/game-loop')
 const gameOver = require('./lib/game-over')
-
-pressStart()
 
 const screenX = 398
 const screenY = 224
