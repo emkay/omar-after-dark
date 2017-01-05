@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": "browserify app.js | uglifyjs -m -c warnings=false > bundle.js",
+    "release": "standard-version",
     "start": "budo app.js:bundle.js",
     "test": "standard"
   },
@@ -31,6 +32,7 @@
     "browserify": "^13.1.1",
     "budo": "^9.3.0",
     "standard": "^8.0.0",
+    "standard-version": "^4.0.0",
     "uglify-js": "^2.7.5"
   },
   "standard": {
