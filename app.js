@@ -1,4 +1,3 @@
-require('./phaser')
 const boot = require('./lib/boot')
 const mainMenu = require('./lib/main-menu')
 const gameLoop = require('./lib/game-loop')

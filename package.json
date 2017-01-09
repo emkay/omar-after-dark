@@ -6,8 +6,9 @@
   "main": "index.js",
   "scripts": {
     "build": "browserify app.js | uglifyjs -m -c warnings=false > bundle.js",
+    "build-phaser": "browserify phaser.js | uglifyjs -m -c warnings=false > phaser-bundle.js",
     "release": "standard-version",
-    "start": "budo app.js:bundle.js",
+    "start": "npm run build-phaser && budo app.js:bundle.js",
     "test": "standard"
   },
   "repository": {
