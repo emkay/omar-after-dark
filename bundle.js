@@ -81,7 +81,7 @@ Boot.prototype.preload = function preload () {
   this.game.load.image('brad', 'assets/images/brad.png')
   this.game.load.tilemap('lifeguard-tower', 'assets/tilemaps/lifeguard-tower.json', null, Phaser.Tilemap.TILED_JSON)
   this.game.load.tilemap('level1', 'assets/tilemaps/oad.json', null, Phaser.Tilemap.TILED_JSON)
-  // this.game.load.audio('intro', 'assets/intro.mp3')
+  this.game.load.audio('intro', 'assets/sound/intro-music.mp3')
 }
 
 Boot.prototype.create = function create () {
@@ -637,6 +637,10 @@ MainMenu.prototype.create = function create () {
 
   this.game.input.gamepad.start()
 
+  this.music = {}
+  this.music.intro = this.game.add.audio('intro')
+  this.music.intro.loopFull(0.5)
+
   const pressStart = this.game.add.sprite(0, 0, 'press-start')
   this.enter = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER)
   this.enter.onDown.addOnce(this.startGame, this)
@@ -659,6 +663,7 @@ MainMenu.prototype.update = function update () {
 MainMenu.prototype.startGame = function startGame () {
   console.log('starting game')
   clearInterval(this.timer)
+  this.music.intro.stop()
   this.game.state.start('lifeguard')
 }
 
