@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "build": "browserify app.js | uglifyjs -m -c warnings=false > bundle.js",
+    "build-music": "./build-music.sh",
     "build-phaser": "browserify phaser.js | uglifyjs -m -c warnings=false > phaser-bundle.js",
     "release": "standard-version",
     "start": "npm run build-phaser && budo app.js:bundle.js",
@@ -27,6 +28,7 @@
   },
   "homepage": "https://github.com/emkay/omar-after-dark#readme",
   "dependencies": {
+    "nesly-sound": "^3.1.0",
     "phaser-ce": "^2.7.2"
   },
   "devDependencies": {
