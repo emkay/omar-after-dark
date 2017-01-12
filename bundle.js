@@ -72,7 +72,10 @@ Boot.prototype.preload = function preload () {
   this.game.load.spritesheet('titlescreen_reflection', 'assets/images/titlescreen_spritesheet_reflection.png', 398, 224, 3)
   this.game.load.spritesheet('titlescreen_stars', 'assets/images/titlescreen_spritesheet_stars.png', 398, 224, 3)
 
-  // this.game.load.image('title', 'assets/oad_title_screen.png')
+  // this.game.load.spritesheet('intro_waves', 'assets/images/intro_spritesheet_waves.png', 398, 224, 3)
+  this.game.load.spritesheet('intro_tide', 'assets/images/intro_spritesheet_tide.png', 398, 224, 3)
+  this.game.load.image('intro_sand', 'assets/images/intro_sand.png')
+
   this.game.load.image('press-start', 'assets/press_start.png')
   this.game.load.spritesheet('omar', 'assets/images/spritesheet_lifeguard_omar.png', 25, 41, 10)
 
@@ -81,7 +84,11 @@ Boot.prototype.preload = function preload () {
   this.game.load.image('brad', 'assets/images/brad.png')
   this.game.load.tilemap('lifeguard-tower', 'assets/tilemaps/lifeguard-tower.json', null, Phaser.Tilemap.TILED_JSON)
   this.game.load.tilemap('level1', 'assets/tilemaps/oad.json', null, Phaser.Tilemap.TILED_JSON)
+
   this.game.load.audio('intro', 'assets/sound/intro-music.mp3')
+  this.game.load.audio('start', 'assets/sound/start.mp3')
+  this.game.load.audio('hit', 'assets/sound/hit.mp3')
+  this.game.load.audio('wave', 'assets/sound/wave.mp3')
 }
 
 Boot.prototype.create = function create () {
@@ -148,6 +155,9 @@ GameLoop.prototype.create = function create () {
     x: 150,
     y: 150
   })
+
+  this.music = {}
+  this.music.hit = this.game.add.audio('hit')
 
   this.map.setCollisionBetween(0, 2000, true, 'blocked')
   this.mainLayer.resizeWorld()
@@ -252,12 +262,14 @@ GameLoop.prototype.updateOmar = function updateOmar () {
     this.game.state.start('gameOver')
   }
 
+  const self = this
   this.game.physics.arcade.collide(
     this.omar.sprite,
     this.blockedLayer,
     () => {
       console.log('COLLISIONNNNN')
       camera.shake(0.005, 100)
+      self.music.hit.play('', 0, 0.25)
     })
 }
 
@@ -422,27 +434,6 @@ module.exports = LifeGuardBino
 },{"./Character":2}],7:[function(require,module,exports){
 const Character = require('./Character')
 
-function findObjectsByType (type, map, layer) {
-  return map.objects[layer]
-    .filter((el) => {
-      return (el && el.type) && (el.type === type)
-    })
-    .map((el) => {
-      console.log('element', el)
-      el.y -= map.tileHeight
-      return el
-    })
-}
-
-function createSpriteFromObject (el, group) {
-  const sprite = group.create(el.x, el.y, el.properties.sprite)
-  Object.keys(el.properties).forEach((key) => {
-    sprite[key] = el.properties[key]
-  })
-
-  return sprite
-}
-
 function LifeGuard (game) {
   this.game = game
   this.isInspectKeyPressed = false
@@ -458,6 +449,18 @@ LifeGuard.prototype.create = function create () {
   this.sandLayer = this.map.createLayer('sand')
   this.bradOceanLayer = this.map.createLayer('brad-ocean')
 
+  const wetSand = this.game.add.sprite(0, 70, 'intro_sand')
+
+  this.tide = this.game.add.sprite(0, 70, 'intro_tide')
+  this.tide.animations.add('go', [0, 1, 2, 1])
+
+  // this.waves = this.game.add.sprite(0, 80, 'intro_waves')
+  // this.waves.animations.add('go', [0, 1, 2, 1])
+
+  this.music = {}
+  this.music.hit = this.game.add.audio('hit')
+  this.music.wave = this.game.add.audio('wave')
+
   this.omar = new Character(this.game, {
     name: 'omar',
     sprite: 'omar',
@@ -469,10 +472,14 @@ LifeGuard.prototype.create = function create () {
   this.map.setCollisionBetween(0, 2000, true, 'blocked')
   this.mainLayer.resizeWorld()
 
-  this.sandLayer.moveDown()
+  this.sandLayer.sendToBack()
   this.omar.sprite.body.collideWorldBounds = true
 
   const camera = this.game.camera
+
+  this.waveInterval = setInterval(() => {
+    self.music.wave.play('', 0, 0.3)
+  }, 5000)
 
   setTimeout(() => {
     const bar = self.game.add.graphics()
@@ -504,7 +511,6 @@ LifeGuard.prototype.create = function create () {
           bar.kill()
         }, 2000)
         if (self.brad.direction === 'right') {
-          console.log('should switch right to left')
           self.brad.direction = 'left'
         } else if (self.brad.direction === 'left') {
           self.brad.direction = 'right'
@@ -533,6 +539,8 @@ LifeGuard.prototype.create = function create () {
 LifeGuard.prototype.update = function update () {
   this.updateOmar()
   this.updateBrad()
+  this.tide.animations.play('go', 1)
+  // this.waves.animations.play('go', 1)
 }
 
 LifeGuard.prototype.updateBrad = function updateBrad () {
@@ -593,6 +601,7 @@ LifeGuard.prototype.updateOmar = function updateOmar () {
       omar.body.y += speed
     } else if (isInspect()) {
       clearInterval(this.interval)
+      clearInterval(this.waveInterval)
       this.game.state.start('life-guard-binoculars')
     } else {
       omar.animations.play('idle')
@@ -601,11 +610,13 @@ LifeGuard.prototype.updateOmar = function updateOmar () {
     this.game.state.start('gameOver')
   }
 
+  const self = this
+
   this.game.physics.arcade.collide(
     this.omar.sprite,
     this.blockedLayer,
     () => {
-      console.log('COLLISIONNNNN')
+      self.music.hit.play('', 0, 0.25)
       camera.shake(0.005, 100)
     })
 }
@@ -639,6 +650,7 @@ MainMenu.prototype.create = function create () {
 
   this.music = {}
   this.music.intro = this.game.add.audio('intro')
+  this.music.start = this.game.add.audio('start')
   this.music.intro.loopFull(0.5)
 
   const pressStart = this.game.add.sprite(0, 0, 'press-start')
@@ -662,6 +674,7 @@ MainMenu.prototype.update = function update () {
 
 MainMenu.prototype.startGame = function startGame () {
   console.log('starting game')
+  this.music.start.play()
   clearInterval(this.timer)
   this.music.intro.stop()
   this.game.state.start('lifeguard')
