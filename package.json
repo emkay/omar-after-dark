@@ -5,7 +5,7 @@
   "description": "Omar After Dark",
   "main": "index.js",
   "scripts": {
-    "build": "browserify app.js | uglifyjs -m -c warnings=false > bundle.js",
+    "build": "browserify app.js > bundle.js",
     "build-music": "./build-music.sh",
     "build-phaser": "browserify phaser.js | uglifyjs -m -c warnings=false > phaser-bundle.js",
     "release": "standard-version",
