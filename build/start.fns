@@ -1,5 +1,5 @@
 ; start.s
-song0_triangle                   = $849D
+song0_triangle                   = $8441
 se_op_adjust_note_offset         = $82DA
 sound_load                       = $802E
 text_sound                       = $E006
@@ -48,11 +48,11 @@ song0_square1                    = $843F
 sound_disable                    = $8023
 handle_input                     = $C0C3
 draw_background                  = $C1D6
-song0_square2                    = $849C
+song0_square2                    = $8440
 song_headers                     = $826C
 se_drum_decay                    = $8410
 forever                          = $C087
-song0_noise                      = $84F2
+song0_noise                      = $8442
 sound_init                       = $8000
 text_song                        = $E000
 se_fade_in                       = $83E4

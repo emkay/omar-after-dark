@@ -33,143 +33,18 @@ song0_header:
 main_loop:
 song0_square1:
 
-	.byte eighth, rest
-
-	.byte duty, duty_50
-	.byte volume_envelope, ve_blip
-	.byte half, Gs2,Ds2,G2,D2
-
-	.byte half, G2,Ds2,Gs2,Bb2
-
-	.byte half, Gs2,Ds2,G2,D2
-
-	.byte half, G2,Ds2,Gs2,Bb2
-
-	.byte half, Gs2,Ds2,G2,D2
-
-	.byte half, G2,Ds2,Gs2,Bb2
-
-	.byte half, Gs2,Ds2,G2,D2
-
-	.byte volume_envelope, ve_short_staccato
-	.byte half, G2,Ds2,Gs2,Bb2
-
-	.byte eighth, rest
-
-	.byte duty, duty_0
-	.byte quarter, Gs2,Ds2,G2,D2
-
-	.byte quarter, G2,Ds2,Gs2,Bb2
-
-	.byte quarter, Gs2,Ds2,G2,D2
-
-	.byte quarter, G2,Ds2,Gs2,Bb2
-
-	.byte quarter, Gs2,Ds2,G2,D2
-
-	.byte quarter, G2,Ds2,Gs2,Bb2
-
-	.byte quarter, Gs2,Ds2,G2,D2
-
-	.byte quarter, G2,Ds2,Gs2,Bb2
-
 	.byte endsound
 song0_square2:
 
 	.byte endsound
 song0_triangle:
 
-	.byte eighth, rest
-
-	.byte half, Gs3,Ds3,G3,D3
-
-	.byte half, G3,Ds3,Gs3,Bb3
-
-	.byte half, Gs3,Ds3,G3,D3
-
-	.byte half, G3,Ds3,Gs3,Bb3
-
-	.byte half, Gs3,Ds3,G3,D3
-
-	.byte half, G3,Ds3,Gs3,Bb3
-
-	.byte half, Gs3,Ds3,G3,D3
-
-	.byte half, G3,Ds3,Gs3,Bb4
-
-	.byte eighth, rest
-
-	.byte quarter, Gs3,Ds3,G3,D3
-
-	.byte quarter, G3,Ds3,Gs3,Bb3
-
-	.byte quarter, Gs3,Ds3,G3,D3
-
-	.byte quarter, G3,Ds3,Gs3,Bb3
-
-	.byte quarter, Gs3,Ds3,G3,D3
-
-	.byte quarter, G3,Ds3,Gs3,Bb3
-
-	.byte quarter, Gs3,Ds3,G3,D3
-
-	.byte quarter, G3,Ds3,Gs3,Bb3
-
 	.byte endsound
 song0_noise:
 
-	.byte eighth, rest
+	.byte eighth, $01
 
-	.byte volume_envelope, ve_off
-	.byte half, rest,rest,rest,rest
-
-	.byte half, rest,rest,rest,rest
-
-	.byte half, rest,rest,rest,rest
-
-	.byte half, rest,rest,rest,rest
-
-	.byte half, rest,rest,rest,rest
-
-	.byte half, rest,rest,rest,rest
-
-	.byte half, rest,rest,rest,rest
-
-	.byte half, rest,rest,rest,rest
-
-	.byte eighth, rest
-
-	.byte volume_envelope, ve_on
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
-
-	.byte eighth, $10,rest,$06,$05
+	.byte volume_envelope, ve_fade_in
+	.byte quarter, $02,$03,$04
 
 	.byte endsound
