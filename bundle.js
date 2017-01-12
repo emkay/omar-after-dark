@@ -72,7 +72,6 @@ Boot.prototype.preload = function preload () {
   this.game.load.spritesheet('titlescreen_reflection', 'assets/images/titlescreen_spritesheet_reflection.png', 398, 224, 3)
   this.game.load.spritesheet('titlescreen_stars', 'assets/images/titlescreen_spritesheet_stars.png', 398, 224, 3)
 
-  // this.game.load.spritesheet('intro_waves', 'assets/images/intro_spritesheet_waves.png', 398, 224, 3)
   this.game.load.spritesheet('intro_tide', 'assets/images/intro_spritesheet_tide.png', 398, 224, 3)
   this.game.load.image('intro_sand', 'assets/images/intro_sand.png')
 
@@ -454,9 +453,6 @@ LifeGuard.prototype.create = function create () {
   this.tide = this.game.add.sprite(0, 70, 'intro_tide')
   this.tide.animations.add('go', [0, 1, 2, 1])
 
-  // this.waves = this.game.add.sprite(0, 80, 'intro_waves')
-  // this.waves.animations.add('go', [0, 1, 2, 1])
-
   this.music = {}
   this.music.hit = this.game.add.audio('hit')
   this.music.wave = this.game.add.audio('wave')
@@ -540,7 +536,6 @@ LifeGuard.prototype.update = function update () {
   this.updateOmar()
   this.updateBrad()
   this.tide.animations.play('go', 1)
-  // this.waves.animations.play('go', 1)
 }
 
 LifeGuard.prototype.updateBrad = function updateBrad () {
