@@ -375,13 +375,13 @@ GameLoop.prototype.updateOmar = function updateOmar () {
                                         text.setText('OMAR: Yeah that sounds really ambitious. I mean you guys aren\'t even moving around or anything.')
 
                                         setTimeout(() => {
-                                          text.setText('EVAN: Did you see the sand catsle?')
+                                          text.setText('EVAN: Did you see the sand castle?')
 
                                           setTimeout(() => {
                                             text.setText('MIKE: Oh yeah! Did you find the special rocks?')
 
                                             setTimeout(() => {
-                                              text.setText('OMAR: Are you guys just trying to talk about other random things so that no one is thinking about how janky this game is?')
+                                              text.setText('OMAR: this game is janky.')
 
                                               setTimeout(() => {
                                                 text.setText('MIKE: Happy Birthday?')
