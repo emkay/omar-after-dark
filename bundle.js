@@ -5,6 +5,7 @@ const lifeGuard = require('./lib/life-guard')
 const lifeGuardBinoculars = require('./lib/life-guard-binoculars')
 const gameLoop = require('./lib/game-loop')
 const gameOver = require('./lib/game-over')
+const bar = require('./lib/bar')
 
 const screenX = 398
 const screenY = 224
@@ -15,12 +16,13 @@ game.state.add('boot', boot)
 game.state.add('mainMenu', mainMenu)
 game.state.add('lifeguard', lifeGuard)
 game.state.add('life-guard-binoculars', lifeGuardBinoculars)
+game.state.add('bar', bar)
 game.state.add('gameLoop', gameLoop)
 game.state.add('gameOver', gameOver)
 
 game.state.start('boot')
 
-},{"./lib/boot":3,"./lib/game-loop":4,"./lib/game-over":5,"./lib/life-guard":7,"./lib/life-guard-binoculars":6,"./lib/main-menu":8}],2:[function(require,module,exports){
+},{"./lib/bar":3,"./lib/boot":4,"./lib/game-loop":5,"./lib/game-over":6,"./lib/life-guard":8,"./lib/life-guard-binoculars":7,"./lib/main-menu":9}],2:[function(require,module,exports){
 function Character (game, options) {
   options = options || {}
   this.game = game
@@ -56,6 +58,8 @@ function Character (game, options) {
 module.exports = Character
 
 },{}],3:[function(require,module,exports){
+
+},{}],4:[function(require,module,exports){
 function Boot (game) {
   this.game = game
 }
@@ -67,6 +71,8 @@ Boot.prototype.preload = function preload () {
   this.game.load.image('titlescreen_omar', 'assets/images/titlescreen_omar.png')
   this.game.load.image('titlescreen_sand_and_tower', 'assets/images/titlescreen_sand_and_tower.png')
   this.game.load.image('titlescreen_sky', 'assets/images/titlescreen_sky.png')
+
+  this.game.load.image('binoculars', 'assets/images/binocular_vision.png')
 
   this.game.load.spritesheet('titlescreen_palmtrees', 'assets/images/titlescreen_spritesheet_palmtrees.png', 398, 224, 3)
   this.game.load.spritesheet('titlescreen_reflection', 'assets/images/titlescreen_spritesheet_reflection.png', 398, 224, 3)
@@ -108,7 +114,7 @@ Boot.prototype.create = function create () {
 
 module.exports = Boot
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 const Character = require('./Character')
 
 function findObjectsByType (type, map, layer) {
@@ -145,6 +151,8 @@ GameLoop.prototype.create = function create () {
   this.treeTopLayer = this.map.createLayer('tree-tops')
   this.flowersLayer = this.map.createLayer('flowers')
 
+  this.dialogueStarted = false
+
   this.treeTopLayer.moveUp()
 
   this.omar = new Character(this.game, {
@@ -153,6 +161,14 @@ GameLoop.prototype.create = function create () {
     isPlayer: true,
     x: 150,
     y: 150
+  })
+
+  this.brad = new Character(this.game, {
+    name: 'brad',
+    sprite: 'brad',
+    isPlayer: false,
+    x: 200,
+    y: 120
   })
 
   this.music = {}
@@ -270,11 +286,89 @@ GameLoop.prototype.updateOmar = function updateOmar () {
       camera.shake(0.005, 100)
       self.music.hit.play('', 0, 0.25)
     })
+
+  this.game.physics.arcade.collide(
+    this.omar.sprite,
+    this.brad.sprite,
+    () => {
+      console.log('dialogue')
+
+      const style = { font: '10px 8BITWONDERNominal', fill: '#fff', boundsAlignH: 'center', boundsAlignV: 'middle', wordWrap: true }
+
+      if (!this.dialogueStarted) {
+        const bar = this.game.add.graphics()
+        bar.beginFill(0x000000, 0.2)
+        bar.drawRect(camera.x, camera.y + 100, 800, 100)
+
+        let text = this.game.add.text(0, 0, 'BRAD: Oh, hey Omar!', style)
+        text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2)
+        text.setTextBounds(camera.x, camera.y + 100, 300, 100)
+
+        this.dialogueStarted = true
+        setTimeout(() => {
+          text.setText('Omar: Don\'t worry Brad! I got you!')
+
+          setTimeout(() => {
+            text.setText('Brad: Oh I wasn\'t really drowning that\'s just how I swim.')
+
+            setTimeout(() => {
+              text.setText('Omar: ...')
+
+              setTimeout(() => {
+                text.setText('Brad: Besides this water isn\'t very good. Look we are just standing here.')
+
+                setTimeout(() => {
+                  text.setText('Omar: Yeahhhh, whats going on?')
+
+                  setTimeout(() => {
+                    text.setText('Brad: uuuuuummmm, oh yeah! I am suppose to tell you Happy Birthday!')
+
+                      setTimeout(() => {
+                        text.setText('annnnd um there is a surprise party.')
+                        setTimeout(() => {
+                          text.setText('So when you are done with your shift and... after dark... come to the bar!')
+
+                          setTimeout(() => {
+                            text.setText('Omar: ...okay.')
+
+                            this.brad.sprite.kill()
+                            text.kill()
+                            bar.kill()
+
+                            setTimeout(() => {
+                              let bar = this.game.add.graphics()
+                              bar.beginFill(0x000000, 0.2)
+                              bar.drawRect(camera.x, camera.y + 100, 800, 100)
+
+                              let text = this.game.add.text(0, 0, 'These waters are safe. Now it\'s time to clean up the streets', style)
+                              text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2)
+                              text.setTextBounds(camera.x, camera.y + 100, 300, 100)
+
+                              setTimeout(() => {
+                                text.setText('Well I guess the streets can wait a little. I should go find that surprise party Brad mentioned. I don\'t want to keep anybody waiting.')
+
+                                setTimeout(() => {
+                                  text.kill()
+                                  bar.kill()
+                                }, 3000)
+                              }, 3000)
+                            }, 10000)
+                          }, 3000)
+                        }, 3000)
+                      }, 3000)
+                  }, 3000)
+                }, 3000)
+              }, 3000)
+            }, 3000)
+          }, 3000)
+        }, 3000)
+      }
+    })
 }
 
 module.exports = GameLoop
 
-},{"./Character":2}],5:[function(require,module,exports){
+},{"./Character":2}],6:[function(require,module,exports){
 function GameOver (game) {
   this.game = game
 }
@@ -285,7 +379,7 @@ GameOver.prototype.create = function create () {
 
 module.exports = GameOver
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 const Character = require('./Character')
 
 function findObjectsByType (type, map, layer) {
@@ -321,6 +415,10 @@ LifeGuardBino.prototype.create = function create () {
   this.sandLayer = this.map.createLayer('sand')
   this.bradOceanLayer = this.map.createLayer('brad-ocean')
 
+  this.binoculars = this.game.add.sprite(0, 0, 'binoculars')
+  this.game.physics.enable(this.binoculars, Phaser.Physics.ARCADE)
+  this.binoculars.body.collideWorldBounds = true
+
   this.mainLayer.resizeWorld()
 
   this.sandLayer.moveDown()
@@ -340,10 +438,11 @@ LifeGuardBino.prototype.create = function create () {
     sprite: 'brad',
     isPlayer: false,
     x: 400,
-    y: 186
+    y: 120
   })
 
   this.bradOceanLayer.bringToTop()
+  this.binoculars.bringToTop()
   this.brad.sprite.moveDown()
 }
 
@@ -412,8 +511,10 @@ LifeGuardBino.prototype.updateCamera = function updateOmar () {
 
     if (isLeft()) {
       camera.x -= 4
+      this.binoculars.x -= 4
     } else if (isRight()) {
       camera.x += 4
+      this.binoculars.x += 4
     }
   } else {
     this.game.state.start('gameOver')
@@ -430,7 +531,7 @@ LifeGuardBino.prototype.updateCamera = function updateOmar () {
 
 module.exports = LifeGuardBino
 
-},{"./Character":2}],7:[function(require,module,exports){
+},{"./Character":2}],8:[function(require,module,exports){
 const Character = require('./Character')
 
 function LifeGuard (game) {
@@ -451,6 +552,7 @@ LifeGuard.prototype.create = function create () {
   const wetSand = this.game.add.sprite(0, 70, 'intro_sand')
 
   this.tide = this.game.add.sprite(0, 70, 'intro_tide')
+  this.tide.bringToTop()
   this.tide.animations.add('go', [0, 1, 2, 1])
 
   this.music = {}
@@ -618,7 +720,7 @@ LifeGuard.prototype.updateOmar = function updateOmar () {
 
 module.exports = LifeGuard
 
-},{"./Character":2}],8:[function(require,module,exports){
+},{"./Character":2}],9:[function(require,module,exports){
 function MainMenu (game) {
   this.game = game
 }
