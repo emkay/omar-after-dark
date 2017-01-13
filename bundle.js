@@ -1,6 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 const boot = require('./lib/boot')
 const mainMenu = require('./lib/main-menu')
+const mainMenuBday = require('./lib/main-menu-bday')
 const lifeGuard = require('./lib/life-guard')
 const lifeGuardBinoculars = require('./lib/life-guard-binoculars')
 const gameLoop = require('./lib/game-loop')
@@ -14,6 +15,7 @@ const game = new Phaser.Game(screenX, screenY, Phaser.CANVAS, '', null)
 
 game.state.add('boot', boot)
 game.state.add('mainMenu', mainMenu)
+game.state.add('mainMenuBday', mainMenuBday)
 game.state.add('lifeguard', lifeGuard)
 game.state.add('life-guard-binoculars', lifeGuardBinoculars)
 game.state.add('bar', bar)
@@ -22,7 +24,7 @@ game.state.add('gameOver', gameOver)
 
 game.state.start('boot')
 
-},{"./lib/bar":3,"./lib/boot":4,"./lib/game-loop":5,"./lib/game-over":6,"./lib/life-guard":8,"./lib/life-guard-binoculars":7,"./lib/main-menu":9}],2:[function(require,module,exports){
+},{"./lib/bar":3,"./lib/boot":4,"./lib/game-loop":5,"./lib/game-over":6,"./lib/life-guard":8,"./lib/life-guard-binoculars":7,"./lib/main-menu":10,"./lib/main-menu-bday":9}],2:[function(require,module,exports){
 function Character (game, options) {
   options = options || {}
   this.game = game
@@ -72,6 +74,8 @@ Boot.prototype.preload = function preload () {
   this.game.load.image('titlescreen_sand_and_tower', 'assets/images/titlescreen_sand_and_tower.png')
   this.game.load.image('titlescreen_sky', 'assets/images/titlescreen_sky.png')
 
+  this.game.load.image('titlescreen_BIRTHDAY_COMPLETE_sand_and_tower', 'assets/images/titlescreen_BIRTHDAY_COMPLETE_sand_and_tower.png')
+
   this.game.load.image('binoculars', 'assets/images/binocular_vision.png')
 
   this.game.load.spritesheet('titlescreen_palmtrees', 'assets/images/titlescreen_spritesheet_palmtrees.png', 398, 224, 3)
@@ -87,6 +91,8 @@ Boot.prototype.preload = function preload () {
   this.game.load.image('gameTiles', 'assets/images/oad-main.png')
   this.game.load.image('special-rock', 'assets/images/special-rock.png')
   this.game.load.image('brad', 'assets/images/brad.png')
+  this.game.load.image('evan', 'assets/images/evan.png')
+  this.game.load.image('mike', 'assets/images/mike.png')
   this.game.load.tilemap('lifeguard-tower', 'assets/tilemaps/lifeguard-tower.json', null, Phaser.Tilemap.TILED_JSON)
   this.game.load.tilemap('level1', 'assets/tilemaps/oad.json', null, Phaser.Tilemap.TILED_JSON)
 
@@ -150,8 +156,10 @@ GameLoop.prototype.create = function create () {
   this.blockedLayer = this.map.createLayer('blocked')
   this.treeTopLayer = this.map.createLayer('tree-tops')
   this.flowersLayer = this.map.createLayer('flowers')
+  this.barLayer = this.map.createLayer('bar')
 
   this.dialogueStarted = false
+  this.barDialogueStarted = false
 
   this.treeTopLayer.moveUp()
 
@@ -175,6 +183,8 @@ GameLoop.prototype.create = function create () {
   this.music.hit = this.game.add.audio('hit')
 
   this.map.setCollisionBetween(0, 2000, true, 'blocked')
+  this.map.setCollisionBetween(0, 2000, true, 'bar')
+
   this.mainLayer.resizeWorld()
 
   this.omar.sprite.moveDown()
@@ -280,6 +290,130 @@ GameLoop.prototype.updateOmar = function updateOmar () {
   const self = this
   this.game.physics.arcade.collide(
     this.omar.sprite,
+    this.barLayer,
+    () => {
+      console.log('at the bar')
+      if (!this.barDialogueStarted) {
+        this.barDialogueStarted = true
+
+        const brad = new Character(this.game, {
+          name: 'brad',
+          sprite: 'brad',
+          isPlayer: false,
+          x: 1736,
+          y: 1438
+        })
+
+        const evan = new Character(this.game, {
+          name: 'evan',
+          sprite: 'evan',
+          isPlayer: false,
+          x: 1769,
+          y: 1443
+        })
+
+        const mike = new Character(this.game, {
+          name: 'mike',
+          sprite: 'mike',
+          isPlayer: false,
+          x: 1727,
+          y: 1459
+        })
+
+        const bar = this.game.add.graphics()
+        bar.beginFill(0x000000, 0.2)
+        bar.drawRect(camera.x, camera.y + 100, 800, 100)
+
+        const style = { font: '10px 8BITWONDERNominal', fill: '#fff', boundsAlignH: 'center', boundsAlignV: 'middle', wordWrap: true }
+        const text = this.game.add.text(0, 0, 'MIKE EVAN BRAD: Surprise!', style)
+        text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2)
+        text.setTextBounds(camera.x, camera.y + 100, 300, 100)
+
+        setTimeout(() => {
+          text.setText('OMAR: ohhh hey guys...so is everyone else on their way orrr?')
+
+          setTimeout(() => {
+            text.setText('MIKE: Yeah about that...')
+
+            setTimeout(() => {
+              text.setText('EVAN: We haven\'t made anybody else yet.')
+
+              setTimeout(() => {
+                text.setText('So these guys are from other games but it took you so long to get here that they all just got really drunk.')
+
+                setTimeout(() => {
+                  text.setText('MIKE: Yeah, this game is our Birthday present to you.')
+
+                  setTimeout(() => {
+                    text.setText('EVAN: HAPPY BIRTHDAY!')
+
+                    setTimeout(() => {
+                      text.setText('OMAR: Well, it\'s not much of a game huh? I mean what happened?')
+
+                      setTimeout(() => {
+                        text.setText('EVAN: Video games is hard bro.')
+                        setTimeout(() => {
+                          text.setText('MIKE: Yeah we are still working on it... but umm... look! Brad\'s here!')
+
+                          setTimeout(() => {
+                            text.setText('BRAD: hah hah! hey guys!..is megaman trying to do a keg stand? Wait. why i am here anyway?')
+                            setTimeout(() => {
+                              text.setText('EVAN: Well there is actually a much bigger story we have in mind for the full game.')
+                              setTimeout(() => {
+                                text.setText('MIKE: Yeah the game is actually not about lifeguarding at all really.')
+
+                                setTimeout(() => {
+                                  text.setText('It\'s about Omar\'s secret life of crime fighting after dark. Like in episode 95 of Indestructible Art!')
+                                  setTimeout(() => {
+                                    text.setText('EVAN: Yeah Brad, you\'re kind of like the femme fatale.')
+
+                                    setTimeout(() => {
+                                      text.setText('BRAD: Wow, that sounds pretty intense.')
+
+                                      setTimeout(() => {
+                                        text.setText('OMAR: Yeah that sounds really ambitious. I mean you guys aren\'t even moving around or anything.')
+
+                                        setTimeout(() => {
+                                          text.setText('EVAN: Did you see the sand catsle?')
+
+                                          setTimeout(() => {
+                                            text.setText('MIKE: Oh yeah! Did you find the special rocks?')
+
+                                            setTimeout(() => {
+                                              text.setText('OMAR: Are you guys just trying to talk about other random things so that no one is thinking about how janky this game is?')
+
+                                              setTimeout(() => {
+                                                text.setText('MIKE: Happy Birthday?')
+
+                                                setTimeout(() => {
+                                                  text.setText('EVAN: Yeahhhhh but that title screen is sick right?')
+                                                  this.game.state.start('mainMenuBday')
+                                                }, 3000)
+                                              }, 3000)
+                                            }, 3000)
+                                          }, 3000)
+                                        }, 3000)
+                                      }, 3000)
+                                    }, 3000)
+                                  }, 3000)
+                                }, 3000)
+                              }, 3000)
+                            }, 3000)
+                          }, 3000)
+                        }, 3000)
+                      }, 3000)
+                    }, 3000)
+                  }, 3000)
+                }, 3000)
+              }, 3000)
+            }, 3000)
+          }, 3000)
+        }, 3000)
+      }
+    })
+
+  this.game.physics.arcade.collide(
+    this.omar.sprite,
     this.blockedLayer,
     () => {
       console.log('COLLISIONNNNN')
@@ -345,12 +479,18 @@ GameLoop.prototype.updateOmar = function updateOmar () {
                               text.setTextBounds(camera.x, camera.y + 100, 300, 100)
 
                               setTimeout(() => {
-                                text.setText('Well I guess the streets can wait a little. I should go find that surprise party Brad mentioned. I don\'t want to keep anybody waiting.')
+                                text.setText('Well I guess the streets can wait a little.')
 
                                 setTimeout(() => {
-                                  text.kill()
-                                  bar.kill()
+                                  text.setText('I should go find that surprise party Brad mentioned. I don\'t want to keep anybody waiting.')
+
+                                  setTimeout(() => {
+                                    text.kill()
+                                    bar.kill()
+                                  }, 3000)
+
                                 }, 3000)
+
                               }, 3000)
                             }, 10000)
                           }, 3000)
@@ -721,6 +861,65 @@ LifeGuard.prototype.updateOmar = function updateOmar () {
 module.exports = LifeGuard
 
 },{"./Character":2}],9:[function(require,module,exports){
+function MainMenu (game) {
+  this.game = game
+}
+
+MainMenu.prototype.create = function create () {
+  this.game.add.sprite(0, 0, 'titlescreen_sky')
+  this.game.add.sprite(0, 0, 'titlescreen_moon')
+  this.game.add.sprite(0, 0, 'titlescreen_ocean')
+  this.reflection = this.game.add.sprite(0, 0, 'titlescreen_reflection')
+
+  this.game.add.sprite(0, 0, 'titlescreen_BIRTHDAY_COMPLETE_sand_and_tower')
+  this.palmtrees = this.game.add.sprite(0, 0, 'titlescreen_palmtrees')
+
+  this.stars = this.game.add.sprite(0, 0, 'titlescreen_stars')
+
+  this.game.add.sprite(0, 0, 'titlescreen_omar')
+  this.game.add.sprite(0, 0, 'titlescreen_afterdark')
+
+  this.palmtrees.animations.add('go', [0, 1, 0, 2])
+  this.reflection.animations.add('go', [0, 1, 2])
+  this.stars.animations.add('go', [0, 1, 2])
+
+  this.game.input.gamepad.start()
+
+  this.music = {}
+  this.music.intro = this.game.add.audio('intro')
+  this.music.start = this.game.add.audio('start')
+  this.music.intro.loopFull(0.5)
+
+  const pressStart = this.game.add.sprite(0, 0, 'press-start')
+  this.enter = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER)
+  this.enter.onDown.addOnce(this.startGame, this)
+
+  this.timer = setInterval(() => {
+    pressStart.visible = !pressStart.visible
+  }, 500)
+}
+
+MainMenu.prototype.update = function update () {
+  const pad = this.game.input.gamepad.pad1
+  if (pad.justPressed(Phaser.Gamepad.XBOX360_START, 250)) {
+    this.startGame()
+  }
+  this.palmtrees.animations.play('go', 3)
+  this.reflection.animations.play('go', 5)
+  this.stars.animations.play('go', 4)
+}
+
+MainMenu.prototype.startGame = function startGame () {
+  console.log('starting game')
+  this.music.start.play()
+  clearInterval(this.timer)
+  this.music.intro.stop()
+  this.game.state.start('lifeguard')
+}
+
+module.exports = MainMenu
+
+},{}],10:[function(require,module,exports){
 function MainMenu (game) {
   this.game = game
 }
