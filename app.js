@@ -4,6 +4,7 @@ const lifeGuard = require('./lib/life-guard')
 const lifeGuardBinoculars = require('./lib/life-guard-binoculars')
 const gameLoop = require('./lib/game-loop')
 const gameOver = require('./lib/game-over')
+const bar = require('./lib/bar')
 
 const screenX = 398
 const screenY = 224
@@ -14,6 +15,7 @@ game.state.add('boot', boot)
 game.state.add('mainMenu', mainMenu)
 game.state.add('lifeguard', lifeGuard)
 game.state.add('life-guard-binoculars', lifeGuardBinoculars)
+game.state.add('bar', bar)
 game.state.add('gameLoop', gameLoop)
 game.state.add('gameOver', gameOver)
 
