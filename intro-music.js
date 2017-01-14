@@ -3,7 +3,6 @@ const Song = require('nesly-sound')
 const song = Song()
 
 const sq1 = song.square1
-const sq2 = song.square2
 const tri = song.triangle
 const noi = song.noise
 
@@ -25,7 +24,7 @@ function yes () {
       .timing(1 / 2)
 
     noi(['rest', 'rest', 'rest', 'rest'])
-      .timing (1 / 2)
+      .timing(1 / 2)
 
     tri(['Gs3', 'Ds3',
       'G3', 'D3'])
@@ -35,7 +34,7 @@ function yes () {
       .timing(1 / 2)
 
     noi(['rest', 'rest', 'rest', 'rest'])
-      .timing (1 / 2)
+      .timing(1 / 2)
 
     tri(['G3', 'Ds3', 'Gs3', 'Bb3'])
       .timing(1 / 2)
@@ -47,7 +46,7 @@ function yes () {
       .timing(1 / 2).staccato()
 
     noi(['rest', 'rest', 'rest', 'rest'])
-      .timing (1 / 2)
+      .timing(1 / 2)
 
     tri(['Gs3', 'Ds3',
       'G3', 'D3'])
@@ -57,7 +56,7 @@ function yes () {
       .timing(1 / 2)
 
     noi(['rest', 'rest', 'rest', 'rest'])
-      .timing (1 / 2)
+      .timing(1 / 2)
 
     tri(['G3', 'Ds3', 'Gs3', 'Bb4'])
       .timing(1 / 2)
