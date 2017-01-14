@@ -24,7 +24,48 @@ game.state.add('gameOver', gameOver)
 
 game.state.start('boot')
 
-},{"./lib/bar":3,"./lib/boot":4,"./lib/game-loop":5,"./lib/game-over":6,"./lib/life-guard":8,"./lib/life-guard-binoculars":7,"./lib/main-menu":10,"./lib/main-menu-bday":9}],2:[function(require,module,exports){
+},{"./lib/bar":5,"./lib/boot":6,"./lib/game-loop":7,"./lib/game-over":8,"./lib/life-guard":10,"./lib/life-guard-binoculars":9,"./lib/main-menu":12,"./lib/main-menu-bday":11}],2:[function(require,module,exports){
+module.exports=[
+  "MIKE EVAN BRAD: Surprise!",
+  "OMAR: ohhh hey guys...so is everyone else on their way orrr?",
+  "MIKE: Yeah about that...",
+  "EVAN: We haven't made anybody else yet.",
+  "EVAN: So these guys are from other games but it took you so long to get here that they all just got really drunk.",
+  "MIKE: Yeah, this game is our Birthday present to you.",
+  "EVAN: HAPPY BIRTHDAY!",
+  "OMAR: Well, it's not much of a game huh? I mean what happened?",
+  "EVAN: Video games is hard bro.",
+  "MIKE: Yeah we are still working on it... but umm... look! Brad's here!",
+  "BRAD: hah hah! hey guys!.. is megaman trying to do a keg stand? Wait. why i am here anyway?",
+  "EVAN: Well there is actually a much bigger story we have in mind for the full game.",
+  "MIKE: Yeah the game is actually not about lifeguarding at all really.",
+  "MIKE: It's about Omar's secret life of crime fighting after dark. Like in episode 95 of Indestructible Art!",
+  "EVAN: Yeah Brad, you're kind of like the femme fatale.",
+  "BRAD: Wow, that sounds pretty intense.",
+  "OMAR: Yeah that sounds really ambitious. I mean you guys aren't even moving around or anything.",
+  "EVAN: Did you see the sand castle?",
+  "MIKE: Oh yeah! Did you find the special rocks?",
+  "OMAR: this game is janky.",
+  "MIKE: Happy Birthday?",
+  "EVAN: Yeahhhhh but that title screen is sick right?",
+
+]
+
+},{}],3:[function(require,module,exports){
+module.exports=[
+  "BRAD: Oh, hey Omar!",
+  "Omar: Don't worry Brad! I got you!",
+  "Brad: Oh I wasn't really drowning that's just how I swim.",
+  "Omar: ...",
+  "Brad: Besides this water isn't very good. Look we are just standing here.",
+  "Omar: Yeahhhh, whats going on?",
+  "Brad: uuuuuummmm, oh yeah! I am suppose to tell you Happy Birthday!",
+  "Brad: annnnd um there is a surprise party.",
+  "So when you are done with your shift and... after dark... come to the bar!",
+  "Omar: ...okay."
+]
+
+},{}],4:[function(require,module,exports){
 function Character (game, options) {
   if (!(this instanceof Character)) {
     return new Character(game, options)
@@ -62,9 +103,9 @@ function Character (game, options) {
 
 module.exports = Character
 
-},{}],3:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 
-},{}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 function Boot (game) {
   this.game = game
 }
@@ -123,7 +164,7 @@ Boot.prototype.create = function create () {
 
 module.exports = Boot
 
-},{}],5:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 const Character = require('./Character')
 
 function findObjectsByType (type, map, layer) {
@@ -153,6 +194,9 @@ function GameLoop (game) {
 }
 
 GameLoop.prototype.create = function create () {
+  this.barDialogue = require('../data/bar-dialogue')
+  this.omarBradDialogue = require('../data/omar-brad-dialogue')
+
   this.map = this.game.add.tilemap('level1')
   this.map.addTilesetImage('oad-main', 'gameTiles')
   this.mainLayer = this.map.createLayer('main')
@@ -332,89 +376,18 @@ GameLoop.prototype.updateOmar = function updateOmar () {
         bar.drawRect(camera.x, camera.y + 100, 800, 100)
 
         const style = { font: '10px 8BITWONDERNominal', fill: '#fff', boundsAlignH: 'center', boundsAlignV: 'middle', wordWrap: true }
-        const text = this.game.add.text(0, 0, 'MIKE EVAN BRAD: Surprise!', style)
+        const text = this.game.add.text(0, 0, this.barDialogue.shift(), style)
         text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2)
         text.setTextBounds(camera.x, camera.y + 100, 300, 100)
 
-        setTimeout(() => {
-          text.setText('OMAR: ohhh hey guys...so is everyone else on their way orrr?')
+        const barTimer = setInterval(() => {
+          if (self.barDialogue.length === 0) {
+            self.game.state.start('mainMenuBday')
+            clearInterval(barTimer)
+            return
+          }
 
-          setTimeout(() => {
-            text.setText('MIKE: Yeah about that...')
-
-            setTimeout(() => {
-              text.setText('EVAN: We haven\'t made anybody else yet.')
-
-              setTimeout(() => {
-                text.setText('So these guys are from other games but it took you so long to get here that they all just got really drunk.')
-
-                setTimeout(() => {
-                  text.setText('MIKE: Yeah, this game is our Birthday present to you.')
-
-                  setTimeout(() => {
-                    text.setText('EVAN: HAPPY BIRTHDAY!')
-
-                    setTimeout(() => {
-                      text.setText('OMAR: Well, it\'s not much of a game huh? I mean what happened?')
-
-                      setTimeout(() => {
-                        text.setText('EVAN: Video games is hard bro.')
-                        setTimeout(() => {
-                          text.setText('MIKE: Yeah we are still working on it... but umm... look! Brad\'s here!')
-
-                          setTimeout(() => {
-                            text.setText('BRAD: hah hah! hey guys!..is megaman trying to do a keg stand? Wait. why i am here anyway?')
-                            setTimeout(() => {
-                              text.setText('EVAN: Well there is actually a much bigger story we have in mind for the full game.')
-                              setTimeout(() => {
-                                text.setText('MIKE: Yeah the game is actually not about lifeguarding at all really.')
-
-                                setTimeout(() => {
-                                  text.setText('It\'s about Omar\'s secret life of crime fighting after dark. Like in episode 95 of Indestructible Art!')
-                                  setTimeout(() => {
-                                    text.setText('EVAN: Yeah Brad, you\'re kind of like the femme fatale.')
-
-                                    setTimeout(() => {
-                                      text.setText('BRAD: Wow, that sounds pretty intense.')
-
-                                      setTimeout(() => {
-                                        text.setText('OMAR: Yeah that sounds really ambitious. I mean you guys aren\'t even moving around or anything.')
-
-                                        setTimeout(() => {
-                                          text.setText('EVAN: Did you see the sand castle?')
-
-                                          setTimeout(() => {
-                                            text.setText('MIKE: Oh yeah! Did you find the special rocks?')
-
-                                            setTimeout(() => {
-                                              text.setText('OMAR: this game is janky.')
-
-                                              setTimeout(() => {
-                                                text.setText('MIKE: Happy Birthday?')
-
-                                                setTimeout(() => {
-                                                  text.setText('EVAN: Yeahhhhh but that title screen is sick right?')
-                                                  self.game.state.start('mainMenuBday')
-                                                }, 3000)
-                                              }, 3000)
-                                            }, 3000)
-                                          }, 3000)
-                                        }, 3000)
-                                      }, 3000)
-                                    }, 3000)
-                                  }, 3000)
-                                }, 3000)
-                              }, 3000)
-                            }, 3000)
-                          }, 3000)
-                        }, 3000)
-                      }, 3000)
-                    }, 3000)
-                  }, 3000)
-                }, 3000)
-              }, 3000)
-            }, 3000)
-          }, 3000)
+          text.setText(this.barDialogue.shift())
         }, 3000)
       }
     })
@@ -441,71 +414,45 @@ GameLoop.prototype.updateOmar = function updateOmar () {
         bar.beginFill(0x000000, 0.2)
         bar.drawRect(camera.x, camera.y + 100, 800, 100)
 
-        let text = this.game.add.text(0, 0, 'BRAD: Oh, hey Omar!', style)
+        let text = this.game.add.text(0, 0, self.omarBradDialogue.shift(), style)
         text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2)
         text.setTextBounds(camera.x, camera.y + 100, 300, 100)
 
         this.dialogueStarted = true
-        setTimeout(() => {
-          text.setText('Omar: Don\'t worry Brad! I got you!')
+        const omarBradDialogueTimer = setInterval(() => {
+          if (self.omarBradDialogue.length === 0) {
+            clearInterval(omarBradDialogueTimer)
 
-          setTimeout(() => {
-            text.setText('Brad: Oh I wasn\'t really drowning that\'s just how I swim.')
+            this.brad.sprite.kill()
+            text.kill()
+            bar.kill()
 
             setTimeout(() => {
-              text.setText('Omar: ...')
+              let bar = this.game.add.graphics()
+              bar.beginFill(0x000000, 0.2)
+              bar.drawRect(camera.x, camera.y + 100, 800, 100)
+
+              let text = this.game.add.text(0, 0, 'These waters are safe. Now it\'s time to clean up the streets', style)
+              text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2)
+              text.setTextBounds(camera.x, camera.y + 100, 300, 100)
 
               setTimeout(() => {
-                text.setText('Brad: Besides this water isn\'t very good. Look we are just standing here.')
+                text.setText('Well I guess the streets can wait a little.')
 
                 setTimeout(() => {
-                  text.setText('Omar: Yeahhhh, whats going on?')
+                  text.setText('I should go find that surprise party Brad mentioned. I don\'t want to keep anybody waiting.')
 
                   setTimeout(() => {
-                    text.setText('Brad: uuuuuummmm, oh yeah! I am suppose to tell you Happy Birthday!')
-
-                    setTimeout(() => {
-                      text.setText('annnnd um there is a surprise party.')
-                      setTimeout(() => {
-                        text.setText('So when you are done with your shift and... after dark... come to the bar!')
-
-                        setTimeout(() => {
-                          text.setText('Omar: ...okay.')
-
-                          this.brad.sprite.kill()
-                          text.kill()
-                          bar.kill()
-
-                          setTimeout(() => {
-                            let bar = this.game.add.graphics()
-                            bar.beginFill(0x000000, 0.2)
-                            bar.drawRect(camera.x, camera.y + 100, 800, 100)
-
-                            let text = this.game.add.text(0, 0, 'These waters are safe. Now it\'s time to clean up the streets', style)
-                            text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2)
-                            text.setTextBounds(camera.x, camera.y + 100, 300, 100)
-
-                            setTimeout(() => {
-                              text.setText('Well I guess the streets can wait a little.')
-
-                              setTimeout(() => {
-                                text.setText('I should go find that surprise party Brad mentioned. I don\'t want to keep anybody waiting.')
-
-                                setTimeout(() => {
-                                  text.kill()
-                                  bar.kill()
-                                }, 3000)
-                              }, 3000)
-                            }, 3000)
-                          }, 10000)
-                        }, 3000)
-                      }, 3000)
-                    }, 3000)
+                    text.kill()
+                    bar.kill()
                   }, 3000)
                 }, 3000)
               }, 3000)
-            }, 3000)
-          }, 3000)
+            }, 10000)
+            return
+          }
+
+          text.setText(self.omarBradDialogue.shift())
         }, 3000)
       }
     })
@@ -513,7 +460,7 @@ GameLoop.prototype.updateOmar = function updateOmar () {
 
 module.exports = GameLoop
 
-},{"./Character":2}],6:[function(require,module,exports){
+},{"../data/bar-dialogue":2,"../data/omar-brad-dialogue":3,"./Character":4}],8:[function(require,module,exports){
 function GameOver (game) {
   this.game = game
 }
@@ -524,7 +471,7 @@ GameOver.prototype.create = function create () {
 
 module.exports = GameOver
 
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 const Character = require('./Character')
 
 function LifeGuardBino (game) {
@@ -639,7 +586,7 @@ LifeGuardBino.prototype.updateCamera = function updateOmar () {
 
 module.exports = LifeGuardBino
 
-},{"./Character":2}],8:[function(require,module,exports){
+},{"./Character":4}],10:[function(require,module,exports){
 const Character = require('./Character')
 
 function LifeGuard (game) {
@@ -828,7 +775,7 @@ LifeGuard.prototype.updateOmar = function updateOmar () {
 
 module.exports = LifeGuard
 
-},{"./Character":2}],9:[function(require,module,exports){
+},{"./Character":4}],11:[function(require,module,exports){
 function MainMenu (game) {
   this.game = game
 }
@@ -887,7 +834,7 @@ MainMenu.prototype.startGame = function startGame () {
 
 module.exports = MainMenu
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 function MainMenu (game) {
   this.game = game
 }
