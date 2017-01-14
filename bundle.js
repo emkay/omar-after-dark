@@ -26,6 +26,9 @@ game.state.start('boot')
 
 },{"./lib/bar":3,"./lib/boot":4,"./lib/game-loop":5,"./lib/game-over":6,"./lib/life-guard":8,"./lib/life-guard-binoculars":7,"./lib/main-menu":10,"./lib/main-menu-bday":9}],2:[function(require,module,exports){
 function Character (game, options) {
+  if (!(this instanceof Character)) {
+    return new Character(game, options)
+  }
   options = options || {}
   this.game = game
   this.name = options.name
@@ -162,7 +165,7 @@ GameLoop.prototype.create = function create () {
   this.dialogueStarted = false
   this.barDialogueStarted = false
 
-  this.treeTopLayer.moveUp()
+  this.treeTopLayer.bringToTop()
 
   this.omar = new Character(this.game, {
     name: 'omar',
@@ -297,7 +300,8 @@ GameLoop.prototype.updateOmar = function updateOmar () {
       if (!self.barDialogueStarted) {
         self.barDialogueStarted = true
 
-        const brad = new Character(this.game, {
+        // brad
+        Character(this.game, {
           name: 'brad',
           sprite: 'brad',
           isPlayer: false,
@@ -305,7 +309,8 @@ GameLoop.prototype.updateOmar = function updateOmar () {
           y: 1438
         })
 
-        const evan = new Character(this.game, {
+        // evan
+        Character(this.game, {
           name: 'evan',
           sprite: 'evan',
           isPlayer: false,
@@ -313,7 +318,8 @@ GameLoop.prototype.updateOmar = function updateOmar () {
           y: 1443
         })
 
-        const mike = new Character(this.game, {
+        // mike
+        Character(this.game, {
           name: 'mike',
           sprite: 'mike',
           isPlayer: false,
@@ -458,45 +464,43 @@ GameLoop.prototype.updateOmar = function updateOmar () {
                   setTimeout(() => {
                     text.setText('Brad: uuuuuummmm, oh yeah! I am suppose to tell you Happy Birthday!')
 
+                    setTimeout(() => {
+                      text.setText('annnnd um there is a surprise party.')
                       setTimeout(() => {
-                        text.setText('annnnd um there is a surprise party.')
+                        text.setText('So when you are done with your shift and... after dark... come to the bar!')
+
                         setTimeout(() => {
-                          text.setText('So when you are done with your shift and... after dark... come to the bar!')
+                          text.setText('Omar: ...okay.')
+
+                          this.brad.sprite.kill()
+                          text.kill()
+                          bar.kill()
 
                           setTimeout(() => {
-                            text.setText('Omar: ...okay.')
+                            let bar = this.game.add.graphics()
+                            bar.beginFill(0x000000, 0.2)
+                            bar.drawRect(camera.x, camera.y + 100, 800, 100)
 
-                            this.brad.sprite.kill()
-                            text.kill()
-                            bar.kill()
+                            let text = this.game.add.text(0, 0, 'These waters are safe. Now it\'s time to clean up the streets', style)
+                            text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2)
+                            text.setTextBounds(camera.x, camera.y + 100, 300, 100)
 
                             setTimeout(() => {
-                              let bar = this.game.add.graphics()
-                              bar.beginFill(0x000000, 0.2)
-                              bar.drawRect(camera.x, camera.y + 100, 800, 100)
-
-                              let text = this.game.add.text(0, 0, 'These waters are safe. Now it\'s time to clean up the streets', style)
-                              text.setShadow(3, 3, 'rgba(0,0,0,0.5)', 2)
-                              text.setTextBounds(camera.x, camera.y + 100, 300, 100)
+                              text.setText('Well I guess the streets can wait a little.')
 
                               setTimeout(() => {
-                                text.setText('Well I guess the streets can wait a little.')
+                                text.setText('I should go find that surprise party Brad mentioned. I don\'t want to keep anybody waiting.')
 
                                 setTimeout(() => {
-                                  text.setText('I should go find that surprise party Brad mentioned. I don\'t want to keep anybody waiting.')
-
-                                  setTimeout(() => {
-                                    text.kill()
-                                    bar.kill()
-                                  }, 3000)
-
+                                  text.kill()
+                                  bar.kill()
                                 }, 3000)
-
                               }, 3000)
-                            }, 10000)
-                          }, 3000)
+                            }, 3000)
+                          }, 10000)
                         }, 3000)
                       }, 3000)
+                    }, 3000)
                   }, 3000)
                 }, 3000)
               }, 3000)
@@ -523,27 +527,6 @@ module.exports = GameOver
 },{}],7:[function(require,module,exports){
 const Character = require('./Character')
 
-function findObjectsByType (type, map, layer) {
-  return map.objects[layer]
-    .filter((el) => {
-      return (el && el.type) && (el.type === type)
-    })
-    .map((el) => {
-      console.log('element', el)
-      el.y -= map.tileHeight
-      return el
-    })
-}
-
-function createSpriteFromObject (el, group) {
-  const sprite = group.create(el.x, el.y, el.properties.sprite)
-  Object.keys(el.properties).forEach((key) => {
-    sprite[key] = el.properties[key]
-  })
-
-  return sprite
-}
-
 function LifeGuardBino (game) {
   this.game = game
 }
@@ -563,7 +546,6 @@ LifeGuardBino.prototype.create = function create () {
   this.mainLayer.resizeWorld()
 
   this.sandLayer.moveDown()
-  const camera = this.game.camera
 
   this.omar = new Character(this.game, {
     name: 'omar',
@@ -635,21 +617,6 @@ LifeGuardBino.prototype.updateCamera = function updateOmar () {
         pad.isDown(Phaser.Gamepad.XBOX360_DPAD_RIGHT)
     }
 
-    const isDown = () => {
-      return cursors.down.isDown ||
-        pad.isDown(Phaser.Gamepad.XBOX360_DPAD_DOWN)
-    }
-
-    const isUp = () => {
-      return cursors.up.isDown ||
-        pad.isDown(Phaser.Gamepad.XBOX360_DPAD_UP)
-    }
-
-    const isInspect = () => {
-      return cursors.inspect.isDown ||
-        pad.justPressed(Phaser.Gamepad.XBOX360_A)
-    }
-
     if (isLeft()) {
       camera.x -= 4
       this.binoculars.x -= 4
@@ -690,7 +657,7 @@ LifeGuard.prototype.create = function create () {
   this.sandLayer = this.map.createLayer('sand')
   this.bradOceanLayer = this.map.createLayer('brad-ocean')
 
-  const wetSand = this.game.add.sprite(0, 70, 'intro_sand')
+  this.game.add.sprite(0, 70, 'intro_sand')
 
   this.tide = this.game.add.sprite(0, 70, 'intro_tide')
   this.tide.bringToTop()
@@ -764,7 +731,7 @@ LifeGuard.prototype.create = function create () {
         name: 'brad',
         sprite: 'brad',
         isPlayer: false,
-        x : 50,
+        x: 50,
         y: 180
       })
 
