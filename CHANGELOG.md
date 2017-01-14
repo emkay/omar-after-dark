@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.1.2"></a>
+## [1.1.2](https://github.com/emkay/omar-after-dark/compare/v1.1.1...v1.1.2) (2017-01-14)
+
+
+### Bug Fixes
+
+* **text setup:** get rid of all the setTimeouts ([a29233d](https://github.com/emkay/omar-after-dark/commit/a29233d))
+
+
+
 <a name="1.1.1"></a>
 ## [1.1.1](https://github.com/emkay/omar-after-dark/compare/v1.1.0...v1.1.1) (2017-01-14)
 
